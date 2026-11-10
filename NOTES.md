@@ -1,4 +1,4 @@
-# Notes
+# Implementation notes
 
 ## Assumptions
 
@@ -25,12 +25,14 @@
    is dropped even though they could be distinct household members. A production
    rule could flag ambiguous initials for review or require corroborating evidence
    before merging two different full names.
+
 2. **Missing unit numbers can miss a duplicate.** Input 100161 (Nina Shaw,
    9 Elm Court, no unit) and 100124 (Nina Shaw, 9 Elm Ct, Apt 3), ZIP 27601,
    both survive. If these identify the same person, two letters are sent. A
    production rule could verify the missing unit against a validated address
    source or request review when a unique candidate exists. Treating every blank
    unit as a wildcard would risk merging residents of different apartments.
+
 3. **Suffix gaps can erase a generation boundary.** Input 100007 (Daniel Price,
    no suffix) and 100026 (Daniel Price JR) at 42 Quarry Rd, ZIP 78701, merge.
    They could be a parent and child. A production rule could request review and
@@ -41,7 +43,13 @@ different real people. Changing them would change the required output.
 
 ## Testing
 
-Use `python -m unittest discover -s tests -v`. Tests include normalization edge
+Run the 37 tests with:
+
+```sh
+python -m unittest discover -s tests -v
+```
+
+Tests include normalization edge
 cases, non-matching unit/suffix boundaries, transitive nickname/initial/suppress
 bridges, priority and numeric-ID ties, distinct LIST counts, original-field
 preservation, summary balances, shuffled-input determinism, and union-find versus
